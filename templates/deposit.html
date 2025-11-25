@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Пополнение счета</h2>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-error{% else %}alert-success{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="account" class="form-label">Выберите счет для пополнения</label>
+                <select name="account" id="account" class="form-control" required>
+                    <option value="">-- Выберите счет --</option>
+                    {% for account in accounts %}
+                    <option value="{{ account.id }}">
+                        {{ account.get_account_type_display }} ({{ account.account_number }}) - {{ account.balance }} ₽
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="amount" class="form-label">Сумма пополнения</label>
+                <input type="number" name="amount" id="amount" class="form-control" 
+                       min="1" max="1000000" step="0.01" required
+                       placeholder="Введите сумму">
+            </div>
+
+            <div class="form-group">
+                <label for="description" class="form-label">Описание</label>
+                <input type="text" name="description" id="description" class="form-control"
+                       placeholder="Например: Пополнение через СБП" value="Пополнение счета">
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn">Пополнить счет</button>
+                <a href="{% url 'accounts' %}" class="btn btn-secondary">Отмена</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Способы пополнения</h3>
+        </div>
+        <div class="payment-methods">
+            <div class="payment-method">
+                <h4>Банковская карта</h4>
+                <p>Мгновенное зачисление, комиссия 0%</p>
+            </div>
+            <div class="payment-method">
+                <h4>СБП (Система быстрых платежей)</h4>
+                <p>Зачисление в течение 1 минуты</p>
+            </div>
+            <div class="payment-method">
+                <h4>Банковский перевод</h4>
+                <p>Зачисление в течение 1-2 рабочих дней</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

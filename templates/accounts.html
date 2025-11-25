@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Мои счета</h2>
+        </div>
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Номер счета</th>
+                    <th>Тип счета</th>
+                    <th>Баланс</th>
+                    <th>Валюта</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for account in accounts %}
+                <tr>
+                    <td>{{ account.account_number }}</td>
+                    <td>{{ account.get_account_type_display }}</td>
+                    <td class="balance">{{ account.balance }} {{ account.currency }}</td>
+                    <td>{{ account.currency }}</td>
+                    <td>
+                        <button class="btn get-balance-btn" data-account-id="{{ account.id }}">
+                            Обновить
+                        </button>
+                        <button class="btn get-transactions-btn" data-account-id="{{ account.id }}">
+                            История
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div id="transactions-container"></div>
+    <div id="alert-container"></div>
+</div>
+{% endblock %}

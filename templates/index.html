@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Добро пожаловать в банк "Хмура"</h2>
+        </div>
+        <p>Ваш надежный финансовый партнер</p>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Мои счета</h3>
+            </div>
+            {% for account in accounts %}
+            <div class="account-item">
+                <h4>{{ account.get_account_type_display }}</h4>
+                <p>№: {{ account.account_number }}</p>
+                <p class="balance">{{ account.balance }} {{ account.currency }}</p>
+                <button class="btn get-balance-btn" data-account-id="{{ account.id }}">
+                    Обновить баланс
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Быстрые операции</h3>
+            </div>
+            <div class="quick-actions">
+                <a href="{% url 'transfer' %}" class="btn">Перевод</a>
+                <a href="{% url 'transactions' %}" class="btn">История операций</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Последние транзакции</h3>
+        </div>
+        <div class="transactions-list">
+            {% for transaction in transactions|slice:":5" %}
+            <div class="transaction-item">
+                <span>{{ transaction.created_at|date:"d.m.Y H:i" }}</span>
+                <span>{{ transaction.get_transaction_type_display }}</span>
+                <span class="{% if transaction.from_account.user == user %}transaction-outgoing{% else %}transaction-incoming{% endif %}">
+                    {% if transaction.from_account.user == user %}-{% else %}+{% endif %}{{ transaction.amount }}
+                </span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div id="alert-container"></div>
+{% endblock %}

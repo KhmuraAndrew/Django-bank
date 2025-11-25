@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Банк "Хмура"</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <img src="{% static 'images/humora_logo.svg' %}" alt="Хмура Банк">
+                <span>Хмура</span>
+            </div>
+            <nav class="nav">
+                <a href="{% url 'index' %}" class="nav-link">Главная</a>
+                <a href="{% url 'accounts' %}" class="nav-link">Счета</a>
+                <a href="{% url 'transactions' %}" class="nav-link">История операций</a>
+                <a href="{% url 'transfer' %}" class="nav-link">Переводы</a>
+            </nav>
+            <div class="user-menu">
+                {% if user.is_authenticated %}
+                    <span class="username">{{ user.username }}</span>
+                    <a href="{% url 'logout' %}" class="logout-btn">Выйти</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="login-btn">Войти</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2024 Банк "Хмура". Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/ajax.js' %}"></script>
+</body>
+</html>
